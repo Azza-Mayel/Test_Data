@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app
+        image: azzaa/repository:latest 
+        ports:
+        - containerPort: 5000
+        env:
+        - name: POSTGRES_DB
+          value: $(DB_NAME)
+        - name: POSTGRES_USER
+          value: $(DB_USERNAME)
+        - name: POSTGRES_PASSWORD
+          value: $(DB_PASSWORD)
+        - name: POSTGRES_HOST
+          value: $(DB_HOST)
+        - name: POSTGRES_PORT
+          value: $(DB_PORT)
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerhub-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: NodePort

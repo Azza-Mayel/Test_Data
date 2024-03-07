@@ -1,0 +1,7 @@
+config.py
+config.json
+.env
+__paycache__/
+__paycache__
+api/__pycache__
+etl/__pycache__
